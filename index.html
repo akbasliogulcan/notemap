@@ -18,12 +18,56 @@
            <!-- map -->
            <div id="map"></div>
 
-           <!-- Js Conection -->
-           <script src="./js/main.js" type="module"></script>
+           <!-- Aside -->
+           <aside>
+                      <!-- Head -->
+                      <div class="head">
+                                 <h1>Notlar</h1>
+                      </div>
+                      <!-- Form -->
+                      <form>
+                                 <div class="field">
+                                            <label>Başlık</label>
+                                            <input type="text" required>
+                                 </div>
+                                 <div class="field">
+                                            <label>Tarih</label>
+                                            <input type="text" required>
+                                 </div>
+                                 <div class="field">
+                                            <label>Durum</label>
+                                            <select>
+                                                       <option value="">Seçiniz</option>
+                                                       <option value="">Ziyaret</option>
+                                                       <option value="">Park Yeri</option>
+                                                       <option value="">Ev</option>
+                                                       <option value="">İş yeri</option>
+
+                                            </select>
+                                 </div>
+
+                                 <!-- Buttons -->
+                                 <div class="buttons">
+                                            <button id="cancel">iptal</button>
+                                            <button type="submit">Ekle</button>
+                                 </div>
+
+                      </form>
+
+                      <!-- List -->
+                      <ul>
+                                 <li>List Elemanı</li>
+                      </ul>
+           </aside>
+
+
 
            <!-- Js leaflet -->
            <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
                       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+           <!-- Js Conection -->
+           <script src="./js/main.js" type="module"></script>
 </body>
 
 </html>
