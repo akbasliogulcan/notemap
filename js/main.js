@@ -8,6 +8,7 @@ let clickedCoords;
 //*let notes kısmında daha önce kaydettiğimiz notları tutuyoruz bunlarda JSON formatında olduğu içim
 //*geri Json formatına çeviriyoruz.
 let notes = JSON.parse(localStorage.getItem('notes')) || [];
+console.log(notes);
 
 
 
@@ -94,6 +95,8 @@ elements.form.addEventListener('submit', (e) => {
            //*Aside kısmını eski haline çevir
            elements.aside.classList.remove('add');
 
+           renderNotes();
+
 
 });
 
@@ -102,20 +105,38 @@ elements.form.addEventListener('submit', (e) => {
 //*Eklenen notları renderlayan Fonks.
 function renderNotes() {
            //*Notes dizisini dönüp her bir note için bir Html oluştur.
-           const noteCards = notes.map((note) => `  <li>
+           const noteCards = notes.map((note) => {
+
+                      //*Tarih ayarlaması
+                      const date = new Date(note.date).toLocaleDateString('tr', {
+                                 day: 'numeric',
+                                 month: 'long',
+                                 year: 'numeric',
+                      });
+
+
+
+                      return `  <li>
                                             <div>
-                                                       <p>T</p>
-                                                       <p>D</p>
-                                                       <p>S</p>
+                                                       <p>${note.title}</p>
+                                                       <p>${date}</p>
+                                                       <p>${note.status}</p>
                                             </div>
                                             <div class="icons">
                                                        <i class="bi bi-airplane" id="fly-btn"></i>
                                                        <i class="bi bi-trash3-fill" id="delete-btn"></i>
                                             </div>
 
-                                 </li>`);
+                                 </li>`}).join("");
+
 
            //*Elde edilen Html'i Aside kısmına aktar.
-           elements.noteList.innerHTML = noteCards
+           elements.noteList.innerHTML = noteCards;
 
 };
+
+
+//*sayfa yüklenirken ilk çalışacak fonks.
+document.addEventListener('DOMContentLoaded', () => {
+           renderNotes();
+});
