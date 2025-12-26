@@ -1,15 +1,19 @@
 import { homeIcon, personIcon } from "./constant.js";
+import { getStatus, getNoteIcon } from "./helper.js";
 import elements from "./ui.js";
 
 
 //*global variables
 let clickedCoords;
+let layer;
 
 //*let notes kısmında daha önce kaydettiğimiz notları tutuyoruz bunlarda JSON formatında olduğu içim
 //*geri Json formatına çeviriyoruz.
 let notes = JSON.parse(localStorage.getItem('notes')) || [];
-console.log(notes);
-
+if (!Array.isArray(notes)) {
+           notes = [];
+           localStorage.setItem('notes', JSON.stringify(notes))
+};
 
 
 //*konum belirleme kullanıcıdan izin alarak
@@ -42,8 +46,17 @@ function loadMap(currentPosition, message) {
            //*marker oluştur
            L.marker(currentPosition, { icon: homeIcon }).addTo(map).bindPopup(message);
 
-           //*harita üzeridndeki tıklanma oalyı
+
+           //*harita üzerine layer katmanı ekle
+           layer = L.layerGroup().addTo(map);
+
+           //*harita üzerindeki tıklanma olayı
            map.on("click", onMapClick);
+
+           renderNotes();
+           renderMarkers();
+
+
 };
 
 //*harita üzerindeki tıklanma olaylarını izleyen fonks.
@@ -87,7 +100,7 @@ elements.form.addEventListener('submit', (e) => {
            notes.push(newNote);
 
            //*LocalStorege Güncelle
-           localStorage.setItem('notes', JSON.stringify(newNote));
+           localStorage.setItem('notes', JSON.stringify(notes));
 
            //*Form reset
            e.target.reset();
@@ -96,6 +109,8 @@ elements.form.addEventListener('submit', (e) => {
            elements.aside.classList.remove('add');
 
            renderNotes();
+
+           renderMarkers();
 
 
 });
@@ -120,7 +135,7 @@ function renderNotes() {
                                             <div>
                                                        <p>${note.title}</p>
                                                        <p>${date}</p>
-                                                       <p>${note.status}</p>
+                                                       <p>${getStatus(note.status)}</p>
                                             </div>
                                             <div class="icons">
                                                        <i class="bi bi-airplane" id="fly-btn"></i>
@@ -136,7 +151,21 @@ function renderNotes() {
 };
 
 
-//*sayfa yüklenirken ilk çalışacak fonks.
-document.addEventListener('DOMContentLoaded', () => {
-           renderNotes();
-});
+//*Mevcut notlar için birer marker render eden Fonks.
+function renderMarkers() {
+
+           //Haritadaki markerları sıfırla 
+           layer.clearLayers();
+
+           //notları dön ve her bir not için bir marker oluştur.
+           notes.map((note) => {
+                      const icon = getNoteIcon(note.status);
+
+
+                      //Marker render et.
+                      L.marker(note.coords, { icon }).addTo(layer);
+           });
+
+
+};
+
