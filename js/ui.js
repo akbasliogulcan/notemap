@@ -4,6 +4,7 @@ const elements = {
            form: document.querySelector("form"),
            noteList: document.querySelector("ul"),
 
+
 };
 
 export default elements;

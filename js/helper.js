@@ -38,7 +38,7 @@ const getNoteIcon = (status) => {
                                  return jobIcon;
 
                       default:
-                                 return "Tanımsız Durum";
+                                 return personIcon;
            }
 
 };

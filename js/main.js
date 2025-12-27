@@ -6,10 +6,12 @@ import elements from "./ui.js";
 //*global variables
 let clickedCoords;
 let layer;
+let icon;
 
 //*let notes kısmında daha önce kaydettiğimiz notları tutuyoruz bunlarda JSON formatında olduğu içim
 //*geri Json formatına çeviriyoruz.
 let notes = JSON.parse(localStorage.getItem('notes')) || [];
+
 if (!Array.isArray(notes)) {
            notes = [];
            localStorage.setItem('notes', JSON.stringify(notes))
@@ -79,12 +81,14 @@ elements.cancelBtn.addEventListener('click', () => {
 
 //*form Gönderildiğinde çalışacak fonks.
 elements.form.addEventListener('submit', (e) => {
+           console.log(e.target);
            e.preventDefault();
 
            //*Form
            const title = e.target[0].value;
            const date = e.target[1].value;
            const status = e.target[2].value;
+           console.log(status);
 
            //*Note objesi oluştur
            const newNote = {
@@ -139,7 +143,7 @@ function renderNotes() {
                                             </div>
                                             <div class="icons">
                                                        <i class="bi bi-airplane" id="fly-btn"></i>
-                                                       <i class="bi bi-trash3-fill" id="delete-btn"></i>
+                                                       <i data-id='${note.id}' class="bi bi-trash3-fill" id="delete-btn"></i>
                                             </div>
 
                                  </li>`}).join("");
@@ -148,7 +152,40 @@ function renderNotes() {
            //*Elde edilen Html'i Aside kısmına aktar.
            elements.noteList.innerHTML = noteCards;
 
+           //*Delete iconlarına eriş
+           const btns = document.querySelectorAll('#delete-btn').forEach((btn) => {
+                      const id = btn.dataset.id
+                      btn.addEventListener('click', () => { deleteNote(id); })
+           });
+
+
 };
+
+
+
+//*Silme işlemi yapan Fonks.
+function deleteNote(id) {
+
+           const response = confirm('silme işlemi onaylıyor musun ?')
+
+           if (response) {
+                      //*id 'si bilinen notu note dizisinde kaldır.
+                      notes = notes.filter((note) => note.id != id)
+
+                      //*silme işleminden sonra localstorage güncelle
+                      localStorage.setItem('notes', JSON.stringify(notes));
+
+                      //*notları render et
+                      renderNotes();
+
+                      //*markerları render et
+                      renderMarkers();
+
+
+           };
+
+};
+
 
 
 //*Mevcut notlar için birer marker render eden Fonks.
@@ -159,6 +196,7 @@ function renderMarkers() {
 
            //notları dön ve her bir not için bir marker oluştur.
            notes.map((note) => {
+
                       const icon = getNoteIcon(note.status);
 
 
